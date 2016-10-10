@@ -1,0 +1,8 @@
+
+[
+{
+	"id" : "check vocab",
+	"caption" : "check vocab",
+	"command": "check_vocab"
+}
+]
