@@ -9,7 +9,7 @@ class CheckVocabCommand(sublime_plugin.TextCommand):
 		vocab_list = []
 
 		# initialize vocab list
-		v = open('./vocab.txt', 'rU')
+		v = open('vocab_checker/vocab.txt', 'rU')
 		for line in v:
 			print(line)
 			vocab_list.append(line.rstrip())
