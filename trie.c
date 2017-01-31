@@ -1,96 +1,76 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "trie.h"
 
-// Converts key current character into index
-// use only 'a' through 'z' and lower case
-#define CHAR_TO_INDEX(c) ((int)c - (int)'a')
-
-
-struct TrieNode {
-	struct TrieNode * children[26 + 1]; // a-z and ' '
-	char * desc;
-};
-
-int insert(const char * key, const char * desc, struct TrieNode * n);
-char* lookup(const char * key, struct TrieNode * n);
-struct TrieNode * new_trie_node();
+struct node * new_trie_node();
+intptr_t mask(char c);
+int char_to_index(char c);
 
 char* knf = "key not found";
 
-struct TrieNode myTrie[] = {
-	{ { 0,0,0,myTrie+1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, 0 },
-	{ { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,myTrie+2,0,0,0,0,0,0,0,0,0,0,0 }, 0 },
-	{ { 0,0,0,0,0,0,myTrie+3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, "or do not, there is no trie" },
-	{ { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, "bark bark" }
-};
-
-int main (int argc, char ** argv)
+int insert(const char * key, const char * desc, struct node * n)
 {
-	struct TrieNode * root = new_trie_node();
-	insert("dog", "furry dumb", root);
-	insert("tamra", "hot wife", root);
-	insert("dogsbody", "person who performs boring menial tasks", root);
-
-	char * key = malloc (256 * sizeof(char));
-	scanf("%s", key);
-
-	printf("%s\n", key);
-	printf("%s\n", lookup(key, myTrie));
-}
-
-int insert(const char * key, const char * desc, struct TrieNode * n)
-{
-	if (*key == '\0') {
+	if (key[0] == '\0') {
 		n->desc = malloc(strlen(desc)*sizeof(char));
 		strcpy(n->desc, desc);
+		n->childmask |= mask('\0');
 		return 1;
 	}
 
-	unsigned int i = CHAR_TO_INDEX(key[0]);
-	if (i > 25) {
-		return 0;
-	} else if (key[0] == ' ') {
-		i = 26;
-	}
-
-	printf ("%d: 0x%X\n", i, (int)n->children[i]);
-
-	if (!n->children[i]) {
+	unsigned int i = char_to_index(key[0]);
+	if (!(n->childmask & mask(key[0]))) {
+		n->childmask |= mask(key[0]);
 		n->children[i] = new_trie_node();
 	}
 	return insert(key+1, desc, n->children[i]);
 }
 
 
-char * lookup(const char * key, struct TrieNode * n)
+char * lookup(const char * key, struct node * n)
 {
-	if (*key == '\0' && n->desc) {
-		return n->desc;
-	} else if (*key == '\0') {
+	if (key[0] == '\0') {
+		if (mask('\0') & n->childmask)
+			return n->desc;
+
 		return knf;
 	}
 
-	unsigned int i = CHAR_TO_INDEX(key[0]);
-	if (i > 25) {
-		return knf;
-	} else if (key[0] == ' ') {
-		i = 26;
-	}
-
-	if (n->children[i]) {
-		return lookup(key+1, n->children[i]);
+	if (mask(key[0]) & n->childmask) {
+		return lookup(key+1, n->children[char_to_index(key[0])]);
 	} else {
 		return knf;
 	}
 }
 
-struct TrieNode * new_trie_node()
+struct node * trie_init()
 {
-	struct TrieNode * n = malloc(sizeof(struct TrieNode));
-	for (int i = 0; i < 26 + 1; i++) {
-		n->children[i] = (struct TrieNode *)0;
+	return new_trie_node();
+}
+
+
+struct node * new_trie_node()
+{
+	struct node * n = malloc(sizeof(struct node));
+	n->childmask = 0;
+	for (int i = 0; i < NUM_CHARS; i++) {
+		n->children[i] = (struct node *)0;
 	}
 	n->desc = (char *)0;
 	return n;
+}
+
+int char_to_index(char c)
+{
+	if (c == '\0')
+		return NUM_CHARS;
+	if (c >= 'a' && c <= 'z')
+		return ((int)c - (int)'a');
+	if (c >= 'A' && c <= 'Z')
+		return ((int)c - (int)'A');
+	if (c == ' ')
+		return 26;
+	return 27;
+}
+
+intptr_t mask(char c)
+{
+	return 1 << char_to_index(c);
 }

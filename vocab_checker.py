@@ -40,3 +40,9 @@ class CheckVocabCommand(sublime_plugin.TextCommand):
 			sublime.DRAW_SQUIGGLY_UNDERLINE|sublime.DRAW_NO_FILL|sublime.DRAW_NO_OUTLINE)
 
 # TODO handle word sequences
+
+# how will you check to see if the hover was over an underlined region?
+# i will initially probably just check them all with
+# for r in regions: if r.contains(point): do_thing()
+# but later I will probably replace that with a callback function with do_thing as a parameter
+# and do some kind of O(logn) search algorithm. check centre, eliminate half. centre of remainder, elminate half, etc.
