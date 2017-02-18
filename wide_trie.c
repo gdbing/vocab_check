@@ -2,8 +2,8 @@
 
 int char_to_index(char c)
 {
-	if (c == '\0')
-		return NUM_CHARS - 1;
+	// if (c == '\0')
+	// 	return NUM_CHARS - 1;
 	if (c >= 'a' && c <= 'z')
 		return (c - 'a');
 	if (c >= 'A' && c <= 'Z')
@@ -13,24 +13,24 @@ int char_to_index(char c)
 	return 27;
 }
 
-struct node * new_trie_node()
+wide_node * new_trie_node()
 {
-	return calloc(1, sizeof(struct node));
+	return calloc(1, sizeof(wide_node));
 }
 
-struct node * init_wide()
+wide_node * init_wide()
 {
 	return new_trie_node();
 }
 
-int insert(const char * key, const char * val, struct node * n)
+int insert(const char * key, const char * val, wide_node * n)
 {
 	unsigned int i = char_to_index(key[0]);
 
 	if (key[0] == '\0') {
 		n->val = malloc(strlen(val)*sizeof(char));
 		strcpy(n->val, val);
-		n->children[i] = (struct node *)1;
+		// n->children[i] = (wide_node *)1;
 		return 1;
 	}
 
@@ -41,15 +41,19 @@ int insert(const char * key, const char * val, struct node * n)
 	return insert(key+1, val, n->children[i]);
 }
 
-const char* lookup_wide(const char * key, struct node * n)
+const char* lookup_wide(const char * key, wide_node * n)
 {
 	unsigned int i = char_to_index(key[0]);
 
+	if (key[0] == '\0') {
+		if (n->val != 0)
+			return n->val;
+		else
+			return "key not found";
+	}
+
 	if (!(n->children[i]))
 		return "key not found";
-
-	if (key[0] == '\0')
-		return n->val;
 
 	return lookup_wide(key+1, n->children[i]);
 }

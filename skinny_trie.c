@@ -1,15 +1,15 @@
 #include "wide_trie.h"
 #include "skinny_trie.h"
 
-size_t node_count(struct node * n);
-size_t val_count(struct node * n);
-size_t add_skinny_node(struct node * n);
+size_t node_count(wide_node * n);
+size_t val_count(wide_node * n);
+size_t add_skinny_node(wide_node * n);
 size_t add_val(const char * val);
 
 
 const char * lookup_r(const char * key, size_t node_i)
 {
-	printf("0x%lX: %s\n", skinny_trie[node_i], key);
+	// printf("0x%lX: %s\n", skinny_trie[node_i], key);
 	if (key[0] == '\0') {
 		if ((1 << (NUM_CHARS - 1)) & skinny_trie[node_i])
 			return vals[skinny_trie[node_i + NUM_CHARS]];
@@ -30,7 +30,7 @@ const char * lookup_skinny(const char * key)
 	return lookup_r(key, 0);
 }
 
-void init_skinny(struct node * n)
+void init_skinny(wide_node * n)
 {
 	vals = malloc(val_count(n) * sizeof(char *));
 	skinny_trie = calloc(node_count(n), sizeof(size_t) * (NUM_CHARS + 1));
@@ -39,7 +39,7 @@ void init_skinny(struct node * n)
 }
 
 /* get number of values in a wide trie */
-size_t val_count(struct node * n)
+size_t val_count(wide_node * n)
 {
 	size_t count = (n->children[NUM_CHARS - 1]) ? 1 : 0;
 	for (int i = 0; i < NUM_CHARS - 1; i++) { // dont crawl \0 child
@@ -50,7 +50,7 @@ size_t val_count(struct node * n)
 }
 
 /* get number of nodes in a wide trie */
-size_t node_count(struct node * n)
+size_t node_count(wide_node * n)
 {
 	size_t count = 1;
 	for (int i = 0; i < NUM_CHARS - 1; i++) { // dont crawl \0 child
@@ -60,7 +60,7 @@ size_t node_count(struct node * n)
 	return count;
 }
 
-size_t add_skinny_node(struct node * n)
+size_t add_skinny_node(wide_node * n)
 {
 	size_t i;
 

@@ -2,12 +2,12 @@
 #include "skinny_trie.h"
 #include <stdio.h>
 
-int print_tree(struct node * root);
+int print_tree(wide_node * root);
 void print_skinny();
 
 int main (int argc, char ** argv)
 {
-	struct node * root = init_wide();
+	wide_node * root = init_wide();
 	insert("dog", "furry dumb", root);
 	insert("do", "or do not, there is no trie", root);
 	insert("tamra", "hot wife", root);
@@ -38,9 +38,9 @@ void print_skinny()
 	}
 
 }
-// int print_tree(struct node * root)
+// int print_tree(wide_node * root)
 // {
-// 	struct node * n = root;
+// 	wide_node * n = root;
 // 	int mask = 1;
 // 	for (int i = 0; i < NUM_CHARS; i++) {
 // 		if (n->childmask & mask) {
