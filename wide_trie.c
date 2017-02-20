@@ -25,14 +25,15 @@ wide_node * init_wide()
 
 int insert(const char * key, const char * val, wide_node * n)
 {
-	unsigned int i = char_to_index(key[0]);
-
 	if (key[0] == '\0') {
-		n->val = malloc(strlen(val)*sizeof(char));
+		if (n->val)
+			free(n->val);
+		n->val = malloc((strlen(val) + 1) * sizeof(char));
 		strcpy(n->val, val);
-		// n->children[i] = (wide_node *)1;
 		return 1;
 	}
+
+	unsigned int i = char_to_index(key[0]);
 
 	if (!(n->children[i])) {
 		n->children[i] = new_trie_node();
@@ -46,7 +47,7 @@ const char* lookup_wide(const char * key, wide_node * n)
 	unsigned int i = char_to_index(key[0]);
 
 	if (key[0] == '\0') {
-		if (n->val != 0)
+		if (n->val)
 			return n->val;
 		else
 			return "key not found";

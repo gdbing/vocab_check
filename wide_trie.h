@@ -8,8 +8,9 @@ typedef struct w_node {
 	char * val;
 } wide_node;
 
-wide_node * init_wide(); /* creates a root node to build trie on */
+wide_node * init_wide(); /* creates root node to build trie on */
 int insert(const char * key, const char * val, wide_node * root);
+
 const char* lookup_wide(const char * key, wide_node * n);
 
 int char_to_index(char c); /* node->children[index] */
