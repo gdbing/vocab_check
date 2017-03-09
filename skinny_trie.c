@@ -10,6 +10,11 @@ size_t lookup_s(const char * key, skinny_trie * st, skinny_node * n);
 
 skinny_trie * init_skinny(wide_trie * wt)
 {
+	if (sizeof(size_t) < 32) {
+		printf("ERROR! size_t is too short on this system");
+		return 0;
+	}
+
 	skinny_trie * st = malloc(sizeof(skinny_trie));
 	st->key_data = calloc(wt->node_count, sizeof(skinny_node));
 
@@ -68,12 +73,6 @@ size_t add_node(wide_node * wn, skinny_trie * t)
 			sn->children[j] = add_node(wn->children[j], t);
 	}
 
-	printf("(0x%lX, ", sn->mask);
-	for (size_t j = 0; j < NUM_CHARS; j++) {
-		printf("%lX,", sn->children[j]);
-	}
-	printf(" 0d%ld)\n", sn->val_i);
-
 	return i;
 }
 
@@ -88,9 +87,6 @@ const char * lookup_skinny(const char * key, skinny_trie * st)
 
 size_t lookup_s(const char * key, skinny_trie * st, skinny_node * n)
 {
-	// skinny_node *n = (skinny_node *)(&skinny_trie[node_i]);
-
-	printf("0x%lX: %s\n", n->mask, key);
 	if (key[0] == '\0') {
 		if ((1 << NUM_CHARS) & n->mask)
 			return n->val_i;
