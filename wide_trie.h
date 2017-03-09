@@ -11,15 +11,16 @@ typedef struct w_node {
 typedef struct w_trie {
 	// the root node of the trie itself
 	wide_node * root;
+	size_t node_count;
 	// variable length array of char* to store vals
 	char ** vals;
-	size_t size;
-	size_t count;
+	size_t val_size;
+	size_t val_count;
 } wide_trie;
 
-wide_node * init_wide();
-int insert_wide(const char * key, const char * val, wide_trie * t);
-int insert_dup_wide(const char * new_key, const char * key, wide_trie * t);
-const char* lookup_wide(const char * key, wide_node * n);
+wide_trie * init_wide();
+int insert(const char * key, const char * val, wide_trie * t);
+int insert_dup(const char * new_key, const char * key, wide_trie * t);
+const char * lookup_wide(const char * key, wide_trie * t);
 
-int char_to_index(char c); /* node->children[index] */
+size_t char_to_index(char c); /* node->children[index] */
