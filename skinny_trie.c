@@ -10,8 +10,8 @@ size_t lookup_s(const char * key, skinny_trie * st, skinny_node * n);
 
 skinny_trie * init_skinny(wide_trie * wt)
 {
-	if (sizeof(size_t) < 32) {
-		printf("ERROR! size_t is too short on this system");
+	if (sizeof(size_t) < 4) {
+		// size_t must be at least NUM_CHARS + 1 bits wide
 		return 0;
 	}
 

@@ -41,6 +41,10 @@ int main (int argc, char ** argv)
 		insert(arr[i], "randstr", trie);
 
 	skinny_trie * st = init_skinny(trie);
+	if (!st) {
+		printf("error: size_t must be at least NUM_CHARS + 1 bits wide");
+		return 0;
+	}
 
 	lookup_skinny("dog", st);
 	lookup_skinny("do", st);
