@@ -3,14 +3,14 @@
 #define NUM_CHARS 28 // a-z + ' ' + 'other'
 
 typedef struct w_node {
+	size_t bit_map;
 	struct w_node * children[NUM_CHARS];
-	size_t val; // index for wide_trie->vals
+	size_t val_i; // index for wide_trie->vals
 } wide_node;
 
 typedef struct w_trie {
 	// the root node of the trie itself
 	wide_node * root;
-	size_t node_count;
 	// variable length array of char* to store vals
 	char ** vals;
 	size_t val_size;

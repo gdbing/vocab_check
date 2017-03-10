@@ -1,5 +1,5 @@
 typedef struct s_node {
-	size_t mask; /* denotes which children exist, whether val exists */
+	size_t bit_map; /* denotes which children exist, whether val exists */
 	size_t children[NUM_CHARS]; /* index location of child in key_data */
 	size_t val_i; /* index of val in vals */
 } skinny_node;

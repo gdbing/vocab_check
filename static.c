@@ -23,27 +23,31 @@ size_t lookup_r(const char * key, skinny_node * n)
 {
 	size_t i = char_to_index(key[0]);
 	if (i == 26 || i == 27) {
-		if ((1 << NUM_CHARS) & n->mask)
+		if ((1 << NUM_CHARS) & n->bit_map)
 			return n->val_i;
 	}
 
-	if ((1 << i) & n->mask)
+	if ((1 << i) & n->bit_map)
 		return lookup_r(key+1, (skinny_node *)&baked_trie[n->children[i]]);
 	else
 		return 0;
 }
 
-const char * lookup(const char * key)
+size_t lookup_key(const char * key)
 {
-	return baked_vals[lookup_r(key, (skinny_node *)&baked_trie[0])];
+	return lookup_r(key, (skinny_node *)&baked_trie[0]);
 }
 
+const char * lookup_val(size_t val_i)
+{
+	return baked_vals[val_i];
+}
 
 int main(int argc, char ** argv)
 {
 	char * key = malloc (256 * sizeof(char));
 	scanf("%s", key);
 
-	printf("%s: %s\n", key, lookup(key));
+	printf("%s: %s\n", key, lookup_val(lookup_key(key)));
 
 }

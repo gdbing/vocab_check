@@ -32,7 +32,6 @@ wide_trie * init_wide()
 	wide_trie * t = malloc(sizeof(wide_trie));
 
 	t->root = new_trie_node();
-	t->node_count = 1;
 
 	t->val_size = 32;
 	t->val_count = 0;
@@ -54,16 +53,13 @@ wide_node * new_trie_node()
 
 int insert(const char * key, const char * val, wide_trie * t)
 /** insert new key and value pair
-	modifies: t->root, t->vals, t->val_count, t->val_size, t->node_count
+	modifies: t->root, t->vals, t->val_count, t->val_size
 
 	return	1 for success
 			0 if key already exists */
 {
-	int c = insert_key(key, t->val_count, t->root);
-	if (c) {
-		t->node_count += c;
+	if (insert_key(key, t->val_count, t->root))
 		return insert_val(val, t);
-	}
 
 	return 0;
 }
@@ -90,18 +86,19 @@ int insert_key(const char * key, size_t val_i, wide_node * n)
 			0 if key already exists */
 {
 	if (key[0] == '\0') {
-		if (!n->val) { // key doesn't already exists
-			n->val = val_i;
-			return 1; // TODO this actually returns count of new nodes + 1 so that we don't return 0 for a new key which just adds a new value to an existing series of characters (eg adding "do" after adding "dog")
-		}
-		return 0;
+		if (n->bit_map & (1 << NUM_CHARS)) // key already exists
+			return 0;
+
+		n->bit_map |= (1 << NUM_CHARS);
+		n->val_i = val_i;
+		return 1;
 	}
 
 	size_t i = char_to_index(key[0]);
 
 	if (!(n->children[i])) {
 		n->children[i] = new_trie_node();
-		return 1 + insert_key(key+1, val_i, n->children[i]);
+		n->bit_map |= (1 << i);
 	}
 
 	return insert_key(key+1, val_i, n->children[i]);
@@ -146,7 +143,7 @@ size_t lookup(const char * key, wide_node * n)
 			0 if key does not exist */
 {
 	if (key[0] == '\0')
-		return n->val;
+		return n->val_i;
 
 	size_t i = char_to_index(key[0]);
 	if (n->children[i])
