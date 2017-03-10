@@ -1,3 +1,4 @@
+#include <string.h>
 #include "wide_trie.h"
 
 wide_node * new_trie_node();
@@ -89,12 +90,14 @@ int insert_key(const char * key, size_t val_i, wide_node * n)
 			0 if key already exists */
 {
 	if (key[0] == '\0') {
-		if (!n->val) // key doesn't already exists
+		if (!n->val) { // key doesn't already exists
 			n->val = val_i;
+			return 1; // TODO this actually returns count of new nodes + 1 so that we don't return 0 for a new key which just adds a new value to an existing series of characters (eg adding "do" after adding "dog")
+		}
 		return 0;
 	}
 
-	unsigned int i = char_to_index(key[0]);
+	size_t i = char_to_index(key[0]);
 
 	if (!(n->children[i])) {
 		n->children[i] = new_trie_node();

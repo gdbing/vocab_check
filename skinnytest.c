@@ -1,6 +1,7 @@
 #include "wide_trie.h"
 #include "skinny_trie.h"
 #include <stdio.h>
+#include <string.h>
 
 void free_node(wide_node * n)
 {

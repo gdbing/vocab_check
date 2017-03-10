@@ -7,7 +7,10 @@ typedef struct s_node {
 typedef struct s_trie {
 	skinny_node * root;
 	size_t * key_data;
+	size_t data_len;
+
 	char ** vals;
+	size_t val_count;
 } skinny_trie;
 
 skinny_trie * init_skinny(wide_trie * t);

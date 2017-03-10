@@ -17,11 +17,13 @@ skinny_trie * init_skinny(wide_trie * wt)
 
 	skinny_trie * st = malloc(sizeof(skinny_trie));
 	st->key_data = calloc(wt->node_count, sizeof(skinny_node));
+	st->data_len = wt->node_count * sizeof(skinny_node) / sizeof(size_t);
 
 	add_node(wt->root, st);
 	st->root = (skinny_node *)(st->key_data);
 
 	st->vals = wt->vals;
+	st->val_count = wt->val_count;
 
 	return st;
 }

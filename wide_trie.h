@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 
 #define NUM_CHARS 28 // a-z + ' ' + 'other'
 
