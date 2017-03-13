@@ -1,28 +1,25 @@
-bake: baked_trie.o wide_trie.o skinny_trie.o
-	gcc -o bake baked_trie.o wide_trie.o skinny_trie.o -ggdb
+init: trie.o init.o init_test.o
+	gcc -o init trie.o init.o init_test.o -ggdb
 
-baked_trie.o: baked_trie.c wide_trie.h skinny_trie.h
-	gcc -c baked_trie.c -ggdb
+lookup: trie.o lookup.o lookup_test.o
+	gcc -o lookup trie.o lookup.o lookup_test.o -ggdb
 
-wide: widetest.o wide_trie.o
-	gcc -o wide widetest.o wide_trie.o -ggdb
+trie.o: trie.h trie.c
+	gcc -c trie.c -ggdb
 
-widetest.o: widetest.c wide_trie.h
-	gcc -c widetest.c -ggdb
+init.o: init.h init.c trie.h
+	gcc -c init.c -ggdb
 
-wide_trie.o: wide_trie.c wide_trie.h
-	gcc -c wide_trie.c -ggdb
+lookup.o: lookup.h lookup.c trie.h baked_data.c
+	gcc -c lookup.c baked_data.c -ggdb
 
-skinny: skinnytest.o skinny_trie.o wide_trie.o
-	gcc -o skinny skinnytest.o skinny_trie.o wide_trie.o -ggdb
+init_test.o: init_test.c trie.h init.h
+	gcc -c init_test.c -ggdb
 
-skinnytest.o: skinnytest.c skinny_trie.h wide_trie.h
-	gcc -c skinnytest.c -ggdb
+lookup_test.o: lookup_test.c trie.h lookup.h
+	gcc -c lookup_test.c -ggdb
 
-skinny_trie.o: skinny_trie.c skinny_trie.h wide_trie.h
-	gcc -c skinny_trie.c -ggdb
-
-binaries=bake wide skinny baked_trie.o wide_trie.o skinny_trie.o
+binaries=init lookup
 
 all: clean $(binaries)
 
