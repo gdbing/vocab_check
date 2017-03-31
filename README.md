@@ -48,10 +48,18 @@ todo
 
 // scratch
 
+Trie is especially good at matching arbitrary length sequences of chars
+ie if checking "not so fast!", wordkith has to check "not", "not so", "not so fast", "not so fast!", "so", "so fast", "so fast!", "fast" and "fast!"
+This makes it trivially easy to check arbitrary length phrases as well as words.
+
 Trie can be a very space inefficient structure. How inefficient it is depends in part on its branching factor, which depends on the character set it is using. A trie which just uses the english alphabet, without cases, has 27 branches (1 per letter and 1 terminal) and a tree may have an average of <2 branches per node, depending on the vocab set. This is super inefficient.
 
 But if we're baking the data anyway, we can pack it together so that nodes overlap, so that they are written in the empty spaces between other nodes.
 
+"packing" is done with a depth first traversal so the skinny trie will be cache friendly for lookups
 
 baking
 "const char *" + word_with_underscores_for_spaces_and_symbols = "definition";
+
+
+http://nullprogram.com/blog/2016/11/15/

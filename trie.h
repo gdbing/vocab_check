@@ -1,5 +1,5 @@
-#ifndef TRIE_H
-#define TRIE_H
+#ifndef _TRIE_H_
+#define _TRIE_H_
 
 #include <stdlib.h>
 
@@ -27,9 +27,9 @@ typedef struct {
 } skinny_node;
 
 typedef struct {
-	skinny_node * root;
-	size_t * key_data;
-	size_t data_len;
+	skinny_node * root; // should be at &key_data[0]
+	size_t * key_data;  // overlapping skinny nodes
+	size_t data_len;    // len of key_data
 	char ** vals;
 	size_t val_count;
 } skinny_trie;
