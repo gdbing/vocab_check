@@ -4,10 +4,9 @@
 
 int main(int argc, char ** argv)
 {
-	char * key = malloc (256 * sizeof(char));
-	while (1) {
-	scanf("%s", key);
+	if (argc > 1)
+		printf("%s: %s\n", argv[1], lookup_val(lookup_key(argv[1])));
+	else
+		printf("usage: lookup key\n");
 
-	printf("%s: %s\n", key, lookup_val(lookup_key(key)));
-	}
 }
