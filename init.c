@@ -188,6 +188,9 @@ void serialize_trie(skinny_trie *st, FILE *fp)
 			break;
 		}
 	}
+	if (len == 0) // there is no data
+		len = sizeof(skinny_node) / sizeof(size_t);
+
 	printf("serialized data len: %ld\n", len); // DEBUG
 	fprintf(fp, "#include \"trie.h\"\n\n");
 
