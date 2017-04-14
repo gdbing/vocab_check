@@ -10,9 +10,7 @@ TODO:
 * handle affixes
 
 * parse json vocab to trie
-* serialize trie to static data
 
-* call functions in C library from python plugin
 
 
 ////////////
@@ -28,8 +26,8 @@ for every range and definition in an array
 
 questions:
 	when to run.
-		track as you type, like modern spellcheck. it would be nice if we didn't have to run it on the whole text with every keystroke, just relookup the changed part. that seems tricky. also, i hate when spellcheck tries to mess with shit i'm in the middle of working with
-		or at invocation
+		- track as you type, like modern spellcheck. it would be nice if we didn't have to run it on the whole text with every keystroke, just relookup the changed part. that seems tricky. also, i hate when spellcheck tries to mess with shit i'm in the middle of working with
+		- or at invocation
 
 	when to parse JSON vocab list
 		as part of running - more dynamic
@@ -62,4 +60,23 @@ baking
 "const char *" + word_with_underscores_for_spaces_and_symbols = "definition";
 
 
+// Build info
+
+make init
+./init key_1 value_1 key_2 value_2 key_n value_n
+- produces baked_data.c
+
+make lookup
+- wont build without valid baked_data.c
+./lookup key
+
+python setup.py build_ext --inplace
+- produces _init.so, _lookup.so
+- lookup.so requires baked_data.c
+anglish.py imports _init
+python anglish.py
+- reads ang.json, produces baked_data.c
+
+// Links
 http://nullprogram.com/blog/2016/11/15/
+http://dan.iel.fm/posts/python-c-extensions/
